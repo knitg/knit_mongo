@@ -1,14 +1,17 @@
-version: '3.7'
+version: "3"
 services:
-  mongodb_container:
-    image: mongo:latest
+  mongod:
+    image: mongo:4.1.13
+    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: kuser
-      MONGO_INITDB_ROOT_PASSWORD: password
-    ports:
-      - 1133:27017
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test
+    deploy:
+      replicas: 1
     volumes:
-      - mongodb_data_container:/data/db
-
-volumes:
-  mongodb_data_container:
+      - /root/data/mongod:/root/data
+      - /root/logs/mongod:/root/logs
+      - ./mongod.conf:/etc/mongod.conf
+    entrypoint: ["mongod","--config","/etc/mongod.conf"]
+    ports:
+      - 27017:27017
